@@ -8,9 +8,21 @@ def get_server_port() -> int:
             # Ports below 1024 are usually reserved for the OS
             if 1024 <= port <= 65535:
                 return port
-            print("Port must be between 1 and 65535. Please try again.")
+            print("Port must be between 1 and 65535. Please try again.\n")
         except ValueError:
-            print("You have not entered a valid port number. Please try again.")
+            print("You have not entered a valid port number. Please try again.\n")
+
+def process_message(message: str) -> tuple[str, bool]:
+    """Returns (response, should_shutdown)."""
+    if message.lower() == "stop":
+        return "The server has shut down.", True
+
+    try:
+        number = int(message)
+        parity = "even" if number % 2 == 0 else "odd"
+        return f"The number you entered is {parity}.", False
+    except ValueError:
+        return "You have not entered a number. Please try again.", False
 
 def main():
     server_port = get_server_port()
@@ -23,29 +35,23 @@ def main():
         while True:
             data, client = server_socket.recvfrom(2048)
             message = data.decode()
-
             timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-
             print(f"{timestamp} | Received message from [{client[0]}:{client[1]}]: {message}")
 
-            if message.lower() == "stop":
+            response, should_shutdown = process_message(message)
+
+            if should_shutdown:
                 print("\nReceived stop command. Shutting down server...")
-                response = "The server has shut down."
-
-                server_socket.sendto(response.encode(), client)
-                break
-
-            if message.isdigit():
-                number = int(message)
-                response = "The number you've entered is even.\n" if number % 2 == 0 else "The number you've entered is odd.\n"
-            else:
-                response = "You have not entered a number. Please try again.\n"
 
             server_socket.sendto(response.encode(), client)
+
+            if should_shutdown:
+                break
     except KeyboardInterrupt:
         print("\nStopping server...")
     finally:
         server_socket.close()
+
 
 if __name__ == "__main__":
     main()
