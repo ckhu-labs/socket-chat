@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 BUFFER_SIZE = 2048
 
 def get_server_port() -> int:
+    """Gets a user-defined port value between 1024 and 65535."""
     while True:
         try:
             port = int(input("Enter your server port: "))
