@@ -18,4 +18,10 @@ while True:
 
     print(f"Received message from [{client[0]}:{client[1]}]: {message}")
 
-    server_socket.sendto(message.encode(), client)
+    if message.isdigit():
+        number = int(message)
+        response = "The number you've entered is even.\n" if number % 2 == 0 else "The number you've entered is odd.\n"
+    else:
+        response = "You have not entered a number. Please try again.\n"
+
+    server_socket.sendto(response.encode(), client)
