@@ -10,7 +10,7 @@ while True:
 server_socket = socket(AF_INET, SOCK_DGRAM)
 server_socket.bind(("", server_port))
 
-print(f"\nListening on port: {server_port}")
+print(f"\nListening on port: {server_port}\n")
 
 try:
     while True:
@@ -18,6 +18,13 @@ try:
         message = data.decode()
 
         print(f"Received message from [{client[0]}:{client[1]}]: {message}")
+
+        if message.lower() == "stop":
+            print("\nReceived stop command. Shutting down server...")
+            response = "The server has shut down."
+
+            server_socket.sendto(response.encode(), client)
+            break
 
         if message.isdigit():
             number = int(message)
