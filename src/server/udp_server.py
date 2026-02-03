@@ -8,6 +8,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+BUFFER_SIZE = 2048
+
 def get_server_port() -> int:
     while True:
         try:
@@ -40,20 +42,18 @@ def main():
 
     try:
         while True:
-            data, client = server_socket.recvfrom(2048)
+            data, client = server_socket.recvfrom(BUFFER_SIZE)
             message = data.decode()
 
             logger.info("Received message from [%s:%d]: %s", *client, message)
 
             response, should_shutdown = process_message(message)
-
-            if should_shutdown:
-                logger.info("Received stop command. Shutting down server...")
-
             server_socket.sendto(response.encode(), client)
 
             if should_shutdown:
+                logger.info("Received stop command. Shutting down server...")
                 break
+
     except KeyboardInterrupt:
         logger.info("Stopping server...")
     finally:
