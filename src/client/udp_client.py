@@ -1,5 +1,13 @@
+import logging
 import ipaddress
 from socket import socket, AF_INET, SOCK_DGRAM
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s",
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
+logger = logging.getLogger(__name__)
 
 BUFFER_SIZE = 2048
 
@@ -25,14 +33,25 @@ def get_server_info() -> tuple[str, int]:
 
 def main():
     server_ip, server_port = get_server_info()
-
     client_socket = socket(AF_INET, SOCK_DGRAM)
-    message = input("Enter a number: ")
 
-    client_socket.sendto(message.encode(), (server_ip, server_port))
-    data, server = client_socket.recvfrom(BUFFER_SIZE)
+    try:
+        while True:
+            message = input("\nEnter a number: ")
 
-    print(data.decode())
+            client_socket.sendto(message.encode(), (server_ip, server_port))
+            data, server = client_socket.recvfrom(BUFFER_SIZE)
+
+            print(data.decode())
+
+            if message == "stop":
+                logger.warning("The server has stopped. The client will also stop running.")
+                break
+
+    except KeyboardInterrupt:
+        logger.warning("\nStopping client...")
+    finally:
+        client_socket.close()
 
 if __name__ == "__main__":
     main()

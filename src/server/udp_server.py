@@ -61,11 +61,11 @@ def main():
             server_socket.sendto(response.encode(), client)
 
             if should_shutdown:
-                logger.info("Received stop command. Shutting down server...")
+                logger.warning("Received stop command. Shutting down server.")
                 break
 
     except KeyboardInterrupt:
-        logger.info("Stopping server...")
+        logger.warning("Stopping server...")
     finally:
         server_socket.close()
 
