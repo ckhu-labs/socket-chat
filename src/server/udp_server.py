@@ -2,7 +2,7 @@ import logging
 import sys
 from socket import AF_INET, SOCK_DGRAM, socket
 
-BUFFER_SIZE = 2048
+from src.utils.message import BUFFER_SIZE, process
 
 logging.basicConfig(
     level=logging.INFO,
@@ -27,19 +27,6 @@ def get_server_port() -> int:
             sys.exit(0)
 
 
-def process_message(message: str) -> tuple[str, bool]:
-    """Returns (response, should_shutdown)."""
-    if message.lower() == "stop":
-        return "The server has shut down.", True
-
-    try:
-        number = int(message)
-        parity = "even" if number % 2 == 0 else "odd"
-        return f"The number you entered is {parity}.", False
-    except ValueError:
-        return "You have not entered a number. Please try again.", False
-
-
 def main():
     server_port = get_server_port()
     server_socket = socket(AF_INET, SOCK_DGRAM)
@@ -61,7 +48,7 @@ def main():
 
             logger.info("Received message from [%s:%d]: %s", *client, message)
 
-            response, should_shutdown = process_message(message)
+            response, should_shutdown = process(message)
 
             try:
                 server_socket.sendto(response.encode("utf-8"), client)

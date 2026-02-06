@@ -2,7 +2,7 @@ import logging
 import sys
 from socket import AF_INET, SO_REUSEADDR, SOCK_STREAM, SOL_SOCKET, socket
 
-BUFFER_SIZE = 2048
+from src.utils.message import BUFFER_SIZE, process
 
 logging.basicConfig(
     level=logging.INFO,
@@ -24,19 +24,6 @@ def get_server_port() -> int:
             print("You have not entered a valid port number. Please try again.\n")
         except KeyboardInterrupt:
             sys.exit(0)
-
-
-def process_message(message: str) -> tuple[str, bool]:
-    """Returns (response, should_shutdown)."""
-    if message.lower() == "stop":
-        return "The server has shut down.", True
-
-    try:
-        number = int(message)
-        parity = "even" if number % 2 == 0 else "odd"
-        return f"The number you entered is {parity}.", False
-    except ValueError:
-        return "You have not entered a number. Please try again.", False
 
 
 def handle_client(connection_socket: socket, client_address: tuple[str, int]) -> bool:
@@ -67,7 +54,7 @@ def handle_client(connection_socket: socket, client_address: tuple[str, int]) ->
             logger.info("Received from [%s:%d]: %s", *client_address, message)
 
             # Process the message
-            response, should_shutdown = process_message(message)
+            response, should_shutdown = process(message)
 
             # Send response back to client
             try:
