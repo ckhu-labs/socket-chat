@@ -1,5 +1,6 @@
 import logging
-from socket import socket, AF_INET, SOCK_DGRAM
+import sys
+from socket import AF_INET, SOCK_DGRAM, socket
 
 BUFFER_SIZE = 2048
 
@@ -23,7 +24,7 @@ def get_server_port() -> int:
         except ValueError:
             print("You have not entered a valid port number. Please try again.\n")
         except KeyboardInterrupt:
-            quit()
+            sys.exit(0)
 
 
 def process_message(message: str) -> tuple[str, bool]:
