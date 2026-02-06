@@ -1,5 +1,6 @@
 import ipaddress
 import logging
+import sys
 from socket import AF_INET, SOCK_DGRAM, socket, timeout
 
 BUFFER_SIZE = 2048
@@ -23,7 +24,7 @@ def get_server_info() -> tuple[str, int]:
         except ValueError:
             print("Invalid IPv4 address format. Please enter a valid IPv4 address.\n")
         except KeyboardInterrupt:
-            quit()
+            sys.exit(0)
 
     while True:
         try:
@@ -34,7 +35,7 @@ def get_server_info() -> tuple[str, int]:
         except ValueError:
             print("You have not entered a valid port number. Please try again.\n")
         except KeyboardInterrupt:
-            quit()
+            sys.exit(0)
 
 
 def main():
