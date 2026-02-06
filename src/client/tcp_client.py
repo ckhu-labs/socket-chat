@@ -47,7 +47,7 @@ def main():
     client_socket = socket(AF_INET, SOCK_STREAM)
     client_socket.settimeout(TIMEOUT_SECONDS)
 
-    # Connect to server (TCP 3-way handshake happens here)
+    # Connect to server
     try:
         logger.info("Connecting to server at %s:%d...", server_ip, server_port)
         client_socket.connect((server_ip, server_port))
