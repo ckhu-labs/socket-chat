@@ -1,5 +1,6 @@
 import logging
-from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR
+import sys
+from socket import AF_INET, SO_REUSEADDR, SOCK_STREAM, SOL_SOCKET, socket
 
 BUFFER_SIZE = 2048
 
@@ -22,8 +23,7 @@ def get_server_port() -> int:
         except ValueError:
             print("You have not entered a valid port number. Please try again.\n")
         except KeyboardInterrupt:
-            logger.warning("\nServer startup cancelled.")
-            exit(0)
+            sys.exit(0)
 
 
 def process_message(message: str) -> tuple[str, bool]:
@@ -60,8 +60,7 @@ def handle_client(connection_socket: socket, client_address: tuple[str, int]) ->
                 message = data.decode("utf-8").strip()
             except UnicodeDecodeError:
                 logger.warning(
-                    "Received malformed data from [%s:%d], ignoring.",
-                    *client_address
+                    "Received malformed data from [%s:%d], ignoring.", *client_address
                 )
                 continue
 
@@ -76,8 +75,7 @@ def handle_client(connection_socket: socket, client_address: tuple[str, int]) ->
                 logger.info("Sent to [%s:%d]: %s", *client_address, response)
             except OSError as e:
                 logger.error(
-                    "Failed to send response to [%s:%d]: %s",
-                    *client_address, e
+                    "Failed to send response to [%s:%d]: %s", *client_address, e
                 )
                 break
 
@@ -99,14 +97,9 @@ def handle_client(connection_socket: socket, client_address: tuple[str, int]) ->
 
 def main():
     server_port = get_server_port()
-
-    # Create TCP listening socket
     server_socket = socket(AF_INET, SOCK_STREAM)
-
     # Allow immediate port reuse (helpful during testing)
     server_socket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)  # SOL_SOCKET, SO_REUSEADDR
-
-    # Bind to all interfaces on specified port
     server_socket.bind(("", server_port))
 
     # Start listening for connections (max 5 queued connections)
@@ -114,7 +107,6 @@ def main():
 
     logger.info("TCP Server listening on 0.0.0.0:%d", server_port)
     logger.info("Waiting for client connections...")
-    logger.info("Send 'stop' from client to shutdown the server\n")
 
     try:
         while True:
@@ -129,10 +121,9 @@ def main():
                 break
 
     except KeyboardInterrupt:
-        logger.warning("\nStopping server via Ctrl+C...")
+        logger.warning("\nStopping server...")
     finally:
         server_socket.close()
-        logger.info("Server socket closed.")
 
 
 if __name__ == "__main__":

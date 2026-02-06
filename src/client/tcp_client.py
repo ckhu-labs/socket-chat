@@ -91,7 +91,6 @@ def main():
             try:
                 # Send message to server
                 client_socket.sendall(message.encode("utf-8"))
-                logger.info("Sent to server: %s", message)
 
                 # Receive response from server
                 data = client_socket.recv(BUFFER_SIZE)
@@ -103,7 +102,6 @@ def main():
 
                 response = data.decode("utf-8")
                 print(f"\nServer response: {response}")
-                logger.info("Received from server: %s", response)
 
                 # Check if we sent stop command
                 if message.lower() == "stop":
@@ -111,7 +109,9 @@ def main():
                     break
 
             except timeout:
-                logger.error("Server did not respond within %d seconds.", TIMEOUT_SECONDS)
+                logger.error(
+                    "Server did not respond within %d seconds.", TIMEOUT_SECONDS
+                )
                 print("Connection timeout. Server may be busy.\n")
             except UnicodeDecodeError:
                 logger.error("Received malformed data from server.")
