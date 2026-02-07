@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TCP Server + Client" type="CompoundRunConfigurationType">
+    <toRun name="TCP Server" type="PythonConfigurationType" />
+    <toRun name="TCP Client" type="PythonConfigurationType" />
+  </configuration>
+</component>

@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="UDP Server + Client" type="CompoundRunConfigurationType">
+    <toRun name="UDP Server" type="PythonConfigurationType" />
+    <toRun name="UDP Client" type="PythonConfigurationType" />
+  </configuration>
+</component>
