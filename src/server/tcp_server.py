@@ -40,20 +40,26 @@ def main():
                                 message = data.decode("utf-8").strip()
                             except UnicodeDecodeError:
                                 logger.warning(
-                                    "Received invalid message from [%s:%d]: %s", *client, data
+                                    "Received invalid message from [%s:%d]: %s",
+                                    *client,
+                                    data,
                                 )
                                 response = "Invalid message format. Please send a valid UTF-8 encoded string."
                                 conn.sendall(response.encode("utf-8"))
                                 continue
 
-                            logger.info("Received message from %s:%d: %s", *client, message)
+                            logger.info(
+                                "Received message from %s:%d: %s", *client, message
+                            )
 
                             response = process_message(message)
                             conn.sendall(response.encode("utf-8"))
                             logger.info("Sent response to %s:%d: %s", *client, response)
 
                             if stop_server(message):
-                                logger.warning("Received stop command. Shutting down server...")
+                                logger.warning(
+                                    "Received stop command. Shutting down server..."
+                                )
                                 shutdown = True
                                 break
                 except Exception as e:

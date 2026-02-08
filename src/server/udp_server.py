@@ -43,7 +43,9 @@ def main():
                         logger.warning("Received stop command. Shutting down server...")
                         shutdown = True
                 except Exception as e:
-                    logger.error("Error processing message from [%s:%d]: %s", *client, e)
+                    logger.error(
+                        "Error processing message from [%s:%d]: %s", *client, e
+                    )
         except KeyboardInterrupt:
             logger.warning("\nStopping server...")
         except Exception as e:

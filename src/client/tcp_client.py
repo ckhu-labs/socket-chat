@@ -13,7 +13,7 @@ def main():
             print(f"Connecting to server at {server_ip}:{server_port}...")
             client_socket.connect((server_ip, server_port))
             print("Successfully connected to server.")
-        except (timeout, ConnectionRefusedError):
+        except timeout, ConnectionRefusedError:
             print(
                 "Connection timeout: server is not reachable. The client will now exit."
             )
